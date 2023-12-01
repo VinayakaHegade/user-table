@@ -1,23 +1,24 @@
-import { useEffect, useState } from "react";
+import useFetchData from "../hooks/useFetchData";
+
+const url =
+  "https://geektrust.s3-ap-southeast-1.amazonaws.com/adminui-problem/members.json";
 
 const Table = () => {
-  const [usersData, setUsersData] = useState([]);
+  const { data: usersData, isLoading, error } = useFetchData(url);
+  console.log(usersData);
 
-  useEffect(() => {
-    async function fetchUsersData() {
-      try {
-        const response = await fetch(
-          "https://geektrust.s3-ap-southeast-1.amazonaws.com/adminui-problem/members.json"
-        );
-        const data = await response.json();
-        setUsersData(data);
-      } catch (error) {
-        console.error(error);
-      }
-    }
+  if (isLoading) {
+    return <p>Loadding...</p>;
+  }
 
-    fetchUsersData();
-  }, []);
+  if (error) {
+    return (
+      <p>
+        Error while fetching data. Error:{error.message}. Developers check the
+        console for error information.
+      </p>
+    );
+  }
 
   return <p>Table</p>;
 };
